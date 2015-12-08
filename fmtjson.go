@@ -8,14 +8,17 @@ import (
 	"os"
 )
 
-var indent string
-var help bool
+var (
+	indent = "\t"
+	spaces int
+	help   bool
+)
 
 func init() {
-	flag.StringVar(&indent, "indent", "\t", "indent value: defaults to \t")
-	flag.StringVar(&indent, "i", "\t", "short flag for -indent")
+	flag.IntVar(&spaces, "spaces", 0, "number of spaces to indent; by default, if not specified, or 0, '\t' is used for indents")
+	flag.IntVar(&spaces, "s", 0, "the short flag for -spaces")
 	flag.BoolVar(&help, "help", false, "indenter help")
-	flag.BoolVar(&help, "h", false, "short flag for -help")
+	flag.BoolVar(&help, "h", false, "the short flag for -help")
 }
 
 func main() {
@@ -29,8 +32,14 @@ func realmain() int {
 		Help()
 		return 0
 	}
+	if spaces > 0 {
+		for i := 0; i < spaces; i++ {
+			indent += " "
+		}
+	}
+
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "\nindenter error: filename required")
+		fmt.Fprintln(os.Stderr, "\nfmtjson error: filename required")
 	}
 
 	for _, fname := range args {
@@ -66,5 +75,29 @@ func realmain() int {
 }
 
 func Help() {
-	fmt.Println("Help is not yet implemented.")
+	helpText := `
+Usage: fmtjson [options] <filename...>
+
+fmtjson will format the json in the received list of files.
+If more than one file is specified, they are separated by
+spaces.  The formatted json will replace the content of the
+input file.
+
+    $ fmtjson file.json
+    $ fmtjson file1.json file2.json
+
+The indentation is configurable using the '-s' or '-spaces'
+flag.  A value > 0 must be specified.  Tab, '\t', is the
+default indent.
+
+    $ fmtjson -s 2 file.json
+
+Flags:
+
+Short  Flag      Type   Default
+-------------------------------
+-s     -spaces   int
+-h     -help     bool   false
+`
+	fmt.Println(helpText)
 }

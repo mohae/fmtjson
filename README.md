@@ -15,6 +15,13 @@ I got tired of dealing with consistently formatting JSON data when hand creating
 
     $ fmtjson /path/to/json/file
 
+fmtjson can format multiple files, each file to be formatted should be separated by a space:
+
+    $ fmtjson file1.json file2.json file3.json
 
 ## Options
-TODO
+
+Flag | Short | Type | Default | Info  
+:-- | :-- | :-- | :-- | :--  
+-help | -h | bool | false | fmtjson Help  
+-spaces | -s | int |  | number of spaces to use for indents; defaults to /; must be > 0  
